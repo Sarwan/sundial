@@ -6,7 +6,7 @@
 
 var 
 	current_time = new Date(),
-	times = SunCalc.getTimes(current_time, 51.5, -0.1),
+	times = SunCalc.getTimes(current_time, 43.49, 87.36),//43°49′30″N 87°36′00″E
 	sunriseStr = moment(times.sunrise).format('HH:mm'),
 	sunsetStr = moment(times.sunset).format('HH:mm');
 
@@ -120,24 +120,24 @@ var dialSunsetTimeText = new Kinetic.Text({
     text: sunsetStr
 });
 var dialDateText = new Kinetic.Text({
-	x: dialBase.getX() - 100,
+	x: dialBase.getX() - 125,
 	y: dialBase.getY(),
     fontSize: 18,
-    width: 200,
-    fontFamily: 'Exo, sans-serif',
+    width: 250,
+    fontFamily: 'Exo, alkatip tor',
     fill: '#969696',
     align: 'center',
-    text: (moment().format('MMMM Do YYYY'))
+    text: dateToday()//(moment().format('MMMM Do YYYY'))//uyghur date
 });
 var dialLocationText = new Kinetic.Text({
 	x: dialBase.getX() - 100,
 	y: dialBase.getY() + 30,
     fontSize: 18,
     width: 200,
-    fontFamily: 'Exo, sans-serif',
+    fontFamily: 'Exo, alkatip tor',
     fill: '#969696',
     align: 'center',
-    text: 'London, UK'
+    text: 'ئۈرۈمچى'
 });
 
 
@@ -151,6 +151,9 @@ var sun = new Kinetic.Circle({
 	fill: '#f0e6a3',
 	draggable: false
 });
+
+
+
 
 var moon_centre_elipse = new Kinetic.Ellipse({
 	x: GetDialX(current_time),
@@ -244,9 +247,10 @@ function SetMoonPhase(date){
 	};
 };
 
+//added by sarwan
+showpt();
 
 // Decide whether to show the moon or sun
-
 if (IsNightTime()) {
 	celestial_layer.add(moon_full);
 	celestial_layer.add(moon_half_left);
@@ -301,3 +305,98 @@ function onUpdateCelestialPosition() {
 	celestial_layer.draw();
 }
 
+//==============================================================
+//code bolw added by sarwan
+
+
+
+function showpt()
+{
+var times = prayTimes.getTimes(new Date(), [43, 87], 6);
+//showDot(times.sunrise);
+//showDot(times.sunset);
+
+showDot(times.fajr,"بامدات");
+showDot(times.dhuhr,"پىشىن");
+showDot(times.asr,"ئەسىر");
+showDot(times.maghrib,"شام");
+showDot(times.isha,"خۇپتەن");
+
+
+}
+
+function showDot(tm,txt)
+{
+	var dateTime=new Date();
+		dateTime.setHours(getHour(tm));
+		dateTime.setMinutes(getMinute(tm));
+	var dot=new Kinetic.Circle({
+	x: GetDialX(dateTime),
+	y: GetDialY(dateTime),
+	radius: 10,
+	fill: '#f000a3',
+	draggable: false
+});
+ 
+ celestial_layer.add(dot);
+ showText(txt,dateTime);
+ showPrayTime(dateTime);
+}
+
+function getHour(tm)
+{
+	var str="";
+	str=tm;
+	console.log(tm);
+	var sArr=str.split(":");
+		console.log("Hour:"+sArr[0]);
+	return parseInt(sArr[0]);
+}
+
+function getMinute(tm)
+{
+	var str="";str=tm;
+	var sArr=str.split(":");
+		console.log("Minute:"+sArr[1]);
+	return parseInt(sArr[1]);
+}
+
+function showText(txt,tm)
+{
+	var prayTxt = new Kinetic.Text({
+	x: GetDialX(tm)-100 ,
+	y: GetDialY(tm) -25,
+    fontSize: 18,
+    width: 200,
+    fontFamily: 'Exo, alkatip tor',
+    fill: '#969696',
+    align: 'center',
+    text: txt
+});
+
+	dialLayer.add(prayTxt);
+}
+
+function showPrayTime(tm)
+{
+	var prayTxt = new Kinetic.Text({
+	x: GetDialX(tm)-100 ,
+	y: GetDialY(tm) +20,
+    fontSize: 18,
+    width: 200,
+    fontFamily: 'Exo, alkatip tor',
+    fill: '#969696',
+    align: 'center',
+    text: moment(tm).format('HH:mm')
+});
+
+	dialLayer.add(prayTxt);
+}
+
+function dateToday()
+{
+	var dt=new Date();
+	var uyDate="";
+	uyDate= dt.getFullYear()+"-يىلى "+dt.getMonth()+"-ئاينىڭ "+dt.getDay()+"-كۈنى";
+	return uyDate;
+}
