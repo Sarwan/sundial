@@ -397,6 +397,6 @@ function dateToday()
 {
 	var dt=new Date();
 	var uyDate="";
-	uyDate= dt.getFullYear()+"-يىلى "+dt.getMonth()+"-ئاينىڭ "+dt.getDay()+"-كۈنى";
+	uyDate= dt.getFullYear()+"-يىلى "+(dt.getMonth()+1)+"-ئاينىڭ "+dt.getDate()"-كۈنى";
 	return uyDate;
 }
